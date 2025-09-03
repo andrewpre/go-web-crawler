@@ -9,12 +9,16 @@ func main() {
 	fmt.Println("Type in the start URL:")
 	var url string
 	fmt.Scanln(&url)
-	sampleURL := "https://www.zappos.com/kratos/c/zappos-homepage"
+	sampleURL := url //"https://www.zappos.com/kratos/c/zappos-homepage"
+
+	var prompt string
+	fmt.Println("Type in the search prompt:")
+	fmt.Scanln(&prompt)
 	if sampleURL == "" {
 		fmt.Println("No URL provided, exiting.")
 		return
 	}
-	prompt := "Find all items that are on sale."
+	// prompt := "Find all items that are on sale."
 	// messages channel to handle communication
 	messages := make(chan Crawler)
 
@@ -55,5 +59,6 @@ func main() {
 	}
 	fmt.Println("No more active crawlers. Exiting channel handler.")
 	close(messages)
-	getUserAnswer(answers, prompt)
+	fmt.Println("All Found Answers:", answers)
+	fmt.Println("System Output:", getUserAnswer(answers, prompt))
 }

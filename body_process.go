@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"regexp"
 	"strings"
 )
@@ -40,4 +41,24 @@ func strip(content string) string {
 	content = strings.TrimSpace(content)
 	return content
 
+}
+
+func interfaceArrayToStringSlice(data interface{}) []string {
+	var result []string
+	arr, ok := data.([]interface{})
+	if !ok {
+		bytes, err := json.Marshal(data)
+		if err == nil {
+			result = append(result, string(bytes))
+		}
+		return result
+	}
+	for _, item := range arr {
+		bytes, err := json.Marshal(item)
+		if err != nil {
+			continue
+		}
+		result = append(result, string(bytes))
+	}
+	return result
 }

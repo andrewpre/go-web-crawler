@@ -13,8 +13,8 @@ import (
 )
 
 type LLM_RESPONSE struct {
-	Urls      []string    `json:"urls"`
-	FoundData interface{} `json:"foundData"`
+	Urls      []string `json:"urls"`
+	FoundData []string `json:"foundData"` //interface{}
 }
 
 func callLLM(responseBody []byte, prompt string) (LLM_RESPONSE, error) {
@@ -38,7 +38,15 @@ func callLLM(responseBody []byte, prompt string) (LLM_RESPONSE, error) {
 	}
 	content := strip(chatCompletion.Choices[0].Message.Content)
 	// fmt.Println("Content Response:", content)
-	err = json.Unmarshal([]byte(content), &llmResponse)
+	var temp struct {
+		Urls      []string    `json:"urls"`
+		FoundData interface{} `json:"foundData"` //interface{}
+	}
+	err = json.Unmarshal([]byte(content), &temp)
+
+	llmResponse.Urls = temp.Urls
+	llmResponse.FoundData = interfaceArrayToStringSlice(temp.FoundData)
+
 	if err != nil {
 		fmt.Println("Error parsing LLM response:", err)
 		return llmResponse, err
